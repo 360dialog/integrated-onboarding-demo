@@ -54,7 +54,7 @@ export default function Home() {
       forwardState: "",
       next: "",
       hosting_type: "",
-      planSelection: "",
+      planSelection: "regular",
       connectClientUser: "",
       clientId: ""
     });
@@ -270,7 +270,7 @@ export default function Home() {
           name="description"
           content="360dialog Integrated Onboarding Demo Application"
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/Logo.png" />
       </Head>
 
       <main className="w-screen h-screen flex flex-col overflow-hidden">
@@ -389,13 +389,13 @@ export default function Home() {
                   onChange={handlePlanChange}
                   optional
                   options={[
-                    { name: "basic" },
+                    // { name: "basic" },
                     { name: "regular" },
                     { name: "premium" },
                   ]}
                 />
 
-                <div>
+                {/* <div>
                   <div className="h-px w-full bg-gray-300 mt-9 mb-6" />
                   <p className="text-sm font-medium text-gray-900">
                     Hosting parameters
@@ -413,7 +413,7 @@ export default function Home() {
                     onChange={handleToggleChange}
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[26px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                </label>
+                </label> */}
 
                 <div>
                   <div className="h-px w-full bg-gray-300 mt-9 mb-6" />
