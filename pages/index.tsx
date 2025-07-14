@@ -194,7 +194,7 @@ export default function Home() {
   const generateCodeSnippet = ():string => {
     let textBase = dedent(
       `<ConnectButton
-        partnerId={${partnerId}}
+        partnerId={${partnerId}}  // <-- Insert your partner ID here (or fill it in the input field on the left side)
         callback={() => {
           console.log("Client ID: " + callbackObject.client);
           console.log("Channel IDs: " + callbackObject.channels);
@@ -202,7 +202,7 @@ export default function Home() {
             console.log("Revoked Channel IDs: " + callbackObject.revokedChannels);
           }
         }}
-        className="" // <-- Insert your own styles via className definition or through inline styling
+        className=""  // <-- Insert your own styles via className definition or through inline styling
         label="${label ? label : "Create your WhatsApp Business Account"}"
         `
     );
@@ -277,12 +277,13 @@ export default function Home() {
         <Header />
 
         <div className="flex flex-col pt-4 px-8 grow h-1/3">
-          <div className="h-1/3 grow overflow-hidden flex flex-row pt-6 pb-6 gap-6 min-w-fit">
-            <div
-              className="overflow-auto relative grow-0 pr-6 min-w-fit"
-              onScroll={handleScroll}
-              ref={scrollContainerRef}
-            >
+          <div className="h-1/3 grow overflow-x-auto pt-6 pb-6">
+            <div className="flex flex-row gap-6 h-full" style={{ minWidth: '1200px' }}>
+                          <div
+                className="overflow-auto relative w-1/4 min-w-96 pr-6"
+                onScroll={handleScroll}
+                ref={scrollContainerRef}
+              >
               <p className="text-md font-bold text-gray-700">Configure</p>
               <div className="relative flex flex-col px-2 py-8 gap-6 min-w-fit max-w-md">
                 <p className="text-sm font-medium text-gray-900 mt-2">
@@ -726,6 +727,7 @@ export default function Home() {
                   `>_`
                 )}
               </div>
+            </div>
             </div>
           </div>
         </div>
