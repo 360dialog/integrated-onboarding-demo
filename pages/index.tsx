@@ -23,14 +23,14 @@ type CallbackObjectType = {
 type QueryParametersType = {
   email: string;
   clientName: string;
-  partnerPayload: string;
   redirectUrl: string;
   forwardState: string;
   next: string;
-  hosting_type: string;
   planSelection: string;
-  connectClientUser: string;
-  clientId: string;
+  flow: string;
+  ioSignature: string;
+  ioTimestamp: string;
+  preverifiedPhoneNumberId: string;
 };
 
 const demoPartnerId = "f167CmPA";
@@ -49,14 +49,14 @@ export default function Home() {
     useState<QueryParametersType>({
       email: "",
       clientName: "",
-      partnerPayload: "",
       redirectUrl: "",
       forwardState: "",
       next: "",
-      hosting_type: "",
       planSelection: "regular",
-      connectClientUser: "",
-      clientId: ""
+      flow: "",
+      ioSignature: "",
+      ioTimestamp: "",
+      preverifiedPhoneNumberId: "",
     });
   const [callbackObject, setcallbackObject] = useState<CallbackObjectType>();
   const [copied, setCopied] = useState<boolean>(false)
@@ -84,12 +84,10 @@ export default function Home() {
 
   const handleToggleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    
+
     setQueryParamatersState((queryParametersState) => ({
       ...queryParametersState,
       ...(name === "next" && { [name]: checked ? "login" : "" }),
-      ...(name === "hosting_type" && { [name]: checked ? "onpremise" : "" }),
-      ...(name === "connectClientUser" && { [name]: checked ? "true" : "" }),
     }));
   }
 
@@ -146,14 +144,14 @@ export default function Home() {
     const parameters = [
       { stateVar: "email", queryParam: "email" },
       { stateVar: "clientName", queryParam: "name" },
-      { stateVar: "partnerPayload", queryParam: "partner" },
       { stateVar: "forwardState", queryParam: "state" },
       { stateVar: "redirectUrl", queryParam: "redirect_url" },
       { stateVar: "next", queryParam: "next" },
-      { stateVar: "hosting_type", queryParam: "hosting_type" },
       { stateVar: "planSelection", queryParam: "plan_selection" },
-      { stateVar: "connectClientUser", queryParam: "connect_client_user" },
-      { stateVar: "clientId", queryParam: "client_id" },
+      { stateVar: "flow", queryParam: "flow" },
+      { stateVar: "ioSignature", queryParam: "io_signature" },
+      { stateVar: "ioTimestamp", queryParam: "io_timestamp" },
+      { stateVar: "preverifiedPhoneNumberId", queryParam: "preverified_phone_number_id" },
     ];
 
     var literalStringArr: string[] = [];
@@ -214,12 +212,13 @@ export default function Home() {
     const parameters = [
       { stateVar: "email", queryParam: "email" },
       { stateVar: "clientName", queryParam: "name" },
-      { stateVar: "partnerPayload", queryParam: "partner" },
       { stateVar: "forwardState", queryParam: "state" },
       { stateVar: "redirectUrl", queryParam: "redirect_url" },
       { stateVar: "planSelection", queryParam: "plan_selection" },
-      { stateVar: "connectClientUser", queryParam: "connect_client_user" },
-      { stateVar: "clientId", queryParam: "client_id" },
+      { stateVar: "flow", queryParam: "flow" },
+      { stateVar: "ioSignature", queryParam: "io_signature" },
+      { stateVar: "ioTimestamp", queryParam: "io_timestamp" },
+      { stateVar: "preverifiedPhoneNumberId", queryParam: "preverified_phone_number_id" },
     ];
 
     var literalStringArr: string[] = [];
@@ -376,13 +375,6 @@ export default function Home() {
                   onChange={handleQueryParameterChange}
                   optional
                 />
-                <Input
-                  label="Client ID (Partner Payload)"
-                  name="partnerPayload"
-                  value={queryParametersState.partnerPayload}
-                  onChange={handleQueryParameterChange}
-                  optional
-                />
                 <Select
                   label="Payment Plan"
                   name="planSelection"
@@ -395,63 +387,41 @@ export default function Home() {
                     { name: "premium" },
                   ]}
                 />
-
-                {/* <div>
-                  <div className="h-px w-full bg-gray-300 mt-9 mb-6" />
-                  <p className="text-sm font-medium text-gray-900">
-                    Hosting parameters
-                  </p>
-                </div>
-                <label className="inline-flex relative items-center justify-between cursor-pointer mt-2 pr-1">
-                  <span className="block text-sm font-medium text-gray-500">
-                    Enforce on-premise hosting
-                  </span>
-                  <input
-                    type="checkbox"
-                    name="hosting_type"
-                    value={queryParametersState.hosting_type}
-                    className="sr-only peer"
-                    onChange={handleToggleChange}
-                  />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[26px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                </label> */}
+                <Input
+                  label="Preverified Phone Number ID"
+                  name="preverifiedPhoneNumberId"
+                  value={queryParametersState.preverifiedPhoneNumberId}
+                  onChange={handleQueryParameterChange}
+                  optional
+                />
 
                 <div>
                   <div className="h-px w-full bg-gray-300 mt-9 mb-6" />
                   <p className="text-sm font-medium text-gray-900">
-                    Account Sharing
+                    Advanced
                   </p>
                 </div>
-
-                <div className="rounded rounded-2xl border border-red-600 py-2 px-4 bg-red-100 bg-opacity-30">
-                  <p className="block text-sm font-regular text-red-600">
-                    Please note: The following parameters shall only be used by
-                    partners hosting their own version of the Embedded Signup.
-                    Using these parameters will allow you to add a client user
-                    to an existing client instance and therefore trigger number
-                    activation.
-                  </p>
-                </div>
-
-                <label className="inline-flex relative items-center justify-between cursor-pointer mt-2 pr-1">
-                  <span className="block text-sm font-medium text-gray-500">
-                    Connect client user flow
-                  </span>
-                  <input
-                    type="checkbox"
-                    name="connectClientUser"
-                    value={queryParametersState.connectClientUser}
-                    className="sr-only peer"
-                    onChange={handleToggleChange}
-                  />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:right-[26px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                </label>
 
                 <Input
-                  label="360dialog Client ID"
-                  name="clientId"
-                  value={queryParametersState.clientId}
+                  label="Flow"
+                  name="flow"
+                  value={queryParametersState.flow}
                   onChange={handleQueryParameterChange}
+                  optional
+                />
+                <Input
+                  label="IO Signature"
+                  name="ioSignature"
+                  value={queryParametersState.ioSignature}
+                  onChange={handleQueryParameterChange}
+                  optional
+                />
+                <Input
+                  label="IO Timestamp"
+                  name="ioTimestamp"
+                  value={queryParametersState.ioTimestamp}
+                  onChange={handleQueryParameterChange}
+                  optional
                 />
 
                 {showScrollLabel && (
@@ -515,18 +485,23 @@ export default function Home() {
                             ...(queryParametersState.clientName && {
                               name: queryParametersState.clientName,
                             }),
-                            ...(queryParametersState.partnerPayload && {
-                              partner: queryParametersState.partnerPayload,
-                            }),
                             ...(queryParametersState.next && {
                               next: queryParametersState.next,
                             }),
                             ...(queryParametersState.planSelection && {
-                              plan_selection:
-                                queryParametersState.planSelection,
+                              plan_selection: queryParametersState.planSelection,
                             }),
-                            ...(queryParametersState.hosting_type && {
-                              hosting_type: queryParametersState.hosting_type,
+                            ...(queryParametersState.flow && {
+                              flow: queryParametersState.flow,
+                            }),
+                            ...(queryParametersState.ioSignature && {
+                              io_signature: queryParametersState.ioSignature,
+                            }),
+                            ...(queryParametersState.ioTimestamp && {
+                              io_timestamp: queryParametersState.ioTimestamp,
+                            }),
+                            ...(queryParametersState.preverifiedPhoneNumberId && {
+                              preverified_phone_number_id: queryParametersState.preverifiedPhoneNumberId,
                             }),
                           }}
                         />
