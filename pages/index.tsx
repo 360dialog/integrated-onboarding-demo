@@ -7,12 +7,14 @@ import Button from "../components/Button";
 
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import jsx from "react-syntax-highlighter/dist/cjs/languages/prism/jsx";
+import markup from "react-syntax-highlighter/dist/cjs/languages/prism/markup";
 import prism from "react-syntax-highlighter/dist/cjs/styles/prism/prism";
 import { dedent } from "ts-dedent";
 import { useRouter } from "next/router";
 import Select from "../components/Select";
 
 SyntaxHighlighter.registerLanguage("jsx", jsx);
+SyntaxHighlighter.registerLanguage("html", markup);
 
 type CallbackObjectType = {
   client: string;
@@ -61,6 +63,7 @@ export default function Home() {
   const [callbackObject, setcallbackObject] = useState<CallbackObjectType>();
   const [copied, setCopied] = useState<boolean>(false);
   const [urlCopied, setUrlCopied] = useState<boolean>(false);
+  const [vanillaCopied, setVanillaCopied] = useState<boolean>(false);
 
   const router = useRouter();
   const { id } = router.query;
@@ -99,10 +102,11 @@ export default function Home() {
     const timeoutCopied = window.setTimeout(() => {
       setCopied(false);
       setUrlCopied(false);
+      setVanillaCopied(false);
     }, 5000);
 
     return () => window.clearTimeout(timeoutCopied);
-  }, [copied, urlCopied]);
+  }, [copied, urlCopied, vanillaCopied]);
 
   const handleCallback = (callbackObject: CallbackObjectType) => {
     /* The callback function returns the client ID as well as all channel IDs, for which you're enabled to fetch the API key via the Partner API */
@@ -242,6 +246,57 @@ export default function Home() {
     }
 
     return textBase.concat("\n/>");
+  };
+
+  const generateVanillaSnippet = (): string => {
+    const env = partnerId === demoPartnerId ? "staging" : "prod";
+    const buttonLabel = label ? label : "Create your WhatsApp Business Account";
+
+    const vanillaParams: { stateVar: string; attr: string }[] = [
+      { stateVar: "email", attr: "email" },
+      { stateVar: "clientName", attr: "name" },
+      { stateVar: "forwardState", attr: "state" },
+      { stateVar: "redirectUrl", attr: "redirect-url" },
+      { stateVar: "next", attr: "next" },
+      { stateVar: "planSelection", attr: "plan-selection" },
+      { stateVar: "flow", attr: "flow" },
+      { stateVar: "ioSignature", attr: "io-signature" },
+      { stateVar: "ioTimestamp", attr: "io-timestamp" },
+      { stateVar: "preverifiedPhoneNumberId", attr: "preverified-phone-number-id" },
+    ];
+
+    const attrLines: string[] = [
+      `  partner-id="${partnerId ? partnerId : "{partner_id}"}"`,
+      `  label="${buttonLabel}"`,
+      `  env="${env}"`,
+    ];
+
+    if (number) {
+      attrLines.push(`  requested-number="${number}"`);
+    }
+
+    vanillaParams.forEach(({ stateVar, attr }) => {
+      const value = queryParametersState[stateVar as keyof QueryParametersType];
+      if (value) {
+        attrLines.push(`  ${attr}="${value}"`);
+      }
+    });
+
+    return [
+      `<!-- From unpkg -->`,
+      `<script src="https://unpkg.com/360dialog-connect-button/dist/dialog-connect-button.umd.js"></script>`,
+      ``,
+      `<dialog-connect-button`,
+      ...attrLines,
+      `></dialog-connect-button>`,
+      ``,
+      `<script>`,
+      `  document.addEventListener('dialog-connect-callback', event => {`,
+      `    console.log('Client ID:', event.detail.client);`,
+      `    console.log('Channels:', event.detail.channels);`,
+      `  });`,
+      `</script>`,
+    ].join("\n");
   };
 
   const generateSignupLink = (): string => {
@@ -645,6 +700,98 @@ export default function Home() {
                         outlined
                       >
                         {copied ? (
+                          <>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="currentColor"
+                              className="w-4 h-4"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0118 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3l1.5 1.5 3-3.75"
+                              />
+                            </svg>
+                            Copied
+                          </>
+                        ) : (
+                          <>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth="1.5"
+                              stroke="currentColor"
+                              className="w-4 h-4"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"
+                              />
+                            </svg>
+                            Copy Code
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col grow pt-6">
+                  <div className="flex flex-row items-baseline justify-between w-full pb-2">
+                    <p className="text-md font-bold text-gray-700 flex-none">
+                      Vanilla JS / HTML Usage
+                    </p>
+                    <a
+                      className="text-sm text-blue-600 px-3 py-1 outline-none hover:text-blue-800 flex flex-row items-center gap-2"
+                      href="https://www.npmjs.com/package/360dialog-connect-button"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Vanilla Usage Docs
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z"
+                          clipRule="evenodd"
+                        />
+                        <path
+                          fillRule="evenodd"
+                          d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                  <div className="relative bg-gray-50 rounded-md grow text text-gray-900 text-sm">
+                    {mounted && (
+                      <SyntaxHighlighter
+                        language="html"
+                        style={prism}
+                        customStyle={{ background: "transparent" }}
+                        className="w-full h-full p-6 max-w-xs lg:max-w-md xl:max-w-lg 2xl:max-w-full m-0"
+                      >
+                        {generateVanillaSnippet()}
+                      </SyntaxHighlighter>
+                    )}
+                    <div className="absolute top-3 right-3">
+                      <Button
+                        onClick={() => {
+                          navigator.clipboard.writeText(generateVanillaSnippet());
+                          setVanillaCopied(true);
+                        }}
+                        outlined
+                      >
+                        {vanillaCopied ? (
                           <>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
