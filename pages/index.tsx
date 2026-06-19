@@ -44,6 +44,10 @@ export default function Home() {
   const [scrollContainerHeight, setScrollContainerHeight] =
     useState<number>(2000);
 
+  const [syncParamsOpen, setSyncParamsOpen] = useState<boolean>(false);
+  const [clientDataOpen, setClientDataOpen] = useState<boolean>(false);
+  const [advancedOpen, setAdvancedOpen] = useState<boolean>(false);
+
   const [partnerId, setPartnerId] = useState<string>("");
   const [label, setLabel] = useState<string>("");
   const [number, setNumber] = useState<string>("");
@@ -315,7 +319,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-screen h-screen overflow-hidden">
+    <div className="w-screen lg:h-screen lg:overflow-hidden">
       <Head>
         <title>360dialog IO Demo</title>
         <meta
@@ -325,17 +329,16 @@ export default function Home() {
         <link rel="icon" href="/Logo.png" />
       </Head>
 
-      <main className="w-screen h-screen flex flex-col overflow-hidden">
+      <main className="w-screen lg:h-screen flex flex-col lg:overflow-hidden">
         <Header />
 
-        <div className="flex flex-col pt-4 px-8 grow h-1/3">
-          <div className="h-1/3 grow overflow-x-auto pt-6 pb-6">
+        <div className="flex flex-col pt-4 px-8 lg:grow lg:h-1/3">
+          <div className="lg:h-1/3 lg:grow lg:overflow-x-auto pt-6 pb-6">
             <div
-              className="flex flex-row gap-6 h-full"
-              style={{ minWidth: "1200px" }}
+              className="flex flex-col lg:flex-row gap-6 lg:h-full"
             >
               <div
-                className="overflow-auto relative w-1/4 min-w-96 pr-6"
+                className="overflow-auto relative w-full lg:w-1/4 lg:min-w-96 pr-6"
                 onScroll={handleScroll}
                 ref={scrollContainerRef}
               >
@@ -385,11 +388,26 @@ export default function Home() {
 
                   <div>
                     <div className="h-px w-full bg-gray-300 mt-9 mb-6" />
-                    <p className="text-sm font-medium text-gray-900">
-                      Synchronization Parameters
-                    </p>
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between lg:cursor-default"
+                      onClick={() => setSyncParamsOpen((o) => !o)}
+                    >
+                      <p className="text-sm font-medium text-gray-900">
+                        Synchronization Parameters
+                      </p>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className={`w-4 h-4 text-gray-500 transition-transform lg:hidden ${syncParamsOpen ? "rotate-180" : ""}`}
+                      >
+                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                      </svg>
+                    </button>
                   </div>
 
+                  <div className={`${syncParamsOpen ? "flex" : "hidden"} lg:flex flex-col gap-6`}>
                   <Input
                     label="Redirect URL"
                     name="redirectUrl"
@@ -404,13 +422,30 @@ export default function Home() {
                     onChange={handleQueryParameterChange}
                     optional
                   />
+                  </div>
 
                   <div>
                     <div className="h-px w-full bg-gray-300 mt-9 mb-6" />
-                    <p className="text-sm font-medium text-gray-900">
-                      Client Data
-                    </p>
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between lg:cursor-default"
+                      onClick={() => setClientDataOpen((o) => !o)}
+                    >
+                      <p className="text-sm font-medium text-gray-900">
+                        Client Data
+                      </p>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className={`w-4 h-4 text-gray-500 transition-transform lg:hidden ${clientDataOpen ? "rotate-180" : ""}`}
+                      >
+                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                      </svg>
+                    </button>
                   </div>
+
+                  <div className={`${clientDataOpen ? "flex" : "hidden"} lg:flex flex-col gap-6`}>
                   <Input
                     label="Number"
                     value={number}
@@ -443,13 +478,29 @@ export default function Home() {
                       { name: "premium" },
                     ]}
                   />
+                  </div>
                   <div>
                     <div className="h-px w-full bg-gray-300 mt-9 mb-6" />
-                    <p className="text-sm font-medium text-gray-900">
-                      Advanced
-                    </p>
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between lg:cursor-default"
+                      onClick={() => setAdvancedOpen((o) => !o)}
+                    >
+                      <p className="text-sm font-medium text-gray-900">
+                        Advanced
+                      </p>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        className={`w-4 h-4 text-gray-500 transition-transform lg:hidden ${advancedOpen ? "rotate-180" : ""}`}
+                      >
+                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                      </svg>
+                    </button>
                   </div>
 
+                  <div className={`${advancedOpen ? "flex" : "hidden"} lg:flex flex-col gap-6`}>
                   <Input
                     label="Flow"
                     name="flow"
@@ -478,6 +529,7 @@ export default function Home() {
                     onChange={handleQueryParameterChange}
                     optional
                   />
+                  </div>
 
                   {showScrollLabel && (
                     <div
@@ -506,12 +558,12 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex flex-col grow pr-6 overflow-auto">
-                <div className="flex flex-col grow">
+              <div className="flex flex-col lg:grow pr-6 lg:overflow-auto">
+                <div className="flex flex-col lg:grow">
                   <p className="text-md font-bold text-gray-700 flex-none">
                     Preview
                   </p>
-                  <div className="mt-2 p-6 bg-dots rounded-md grow border border-gray-100 relative">
+                  <div className="mt-2 p-6 bg-dots rounded-md lg:grow min-h-40 border border-gray-100 relative">
                     <div className="w-full h-full flex flex-col items-center justify-center">
                       {mounted && (
                         <>
@@ -575,13 +627,13 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex flex-col grow pt-6">
+                <div className="flex flex-col lg:grow pt-6">
                   <div className="flex flex-row items-baseline justify-between w-full pb-2">
                     <p className="text-md font-bold text-gray-700 flex-none">
                       Signup Link
                     </p>
                   </div>
-                  <div className="relative bg-gray-50 rounded-md grow text text-gray-900 text-sm pt-8">
+                  <div className="relative bg-gray-50 rounded-md lg:grow min-h-36 text text-gray-900 text-sm pt-8">
                     {mounted && (
                       <SyntaxHighlighter
                         language="jsx"
@@ -649,7 +701,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex flex-col grow pt-6">
+                <div className="flex flex-col lg:grow pt-6">
                   <div className="flex flex-row items-baseline justify-between w-full pb-2">
                     <p className="text-md font-bold text-gray-700 flex-none">
                       Connect Button Code
@@ -680,7 +732,7 @@ export default function Home() {
                       </svg>
                     </a>
                   </div>
-                  <div className="relative bg-gray-50 rounded-md grow text text-gray-900 text-sm">
+                  <div className="relative bg-gray-50 rounded-md lg:grow min-h-36 text text-gray-900 text-sm">
                     {mounted && (
                       <SyntaxHighlighter
                         language="jsx"
@@ -741,7 +793,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex flex-col grow pt-6">
+                <div className="flex flex-col lg:grow pt-6">
                   <div className="flex flex-row items-baseline justify-between w-full pb-2">
                     <p className="text-md font-bold text-gray-700 flex-none">
                       Vanilla JS / HTML Usage
@@ -772,7 +824,7 @@ export default function Home() {
                       </svg>
                     </a>
                   </div>
-                  <div className="relative bg-gray-50 rounded-md grow text text-gray-900 text-sm">
+                  <div className="relative bg-gray-50 rounded-md lg:grow min-h-36 text text-gray-900 text-sm">
                     {mounted && (
                       <SyntaxHighlighter
                         language="html"
@@ -834,11 +886,11 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="flex flex-col w-1/4 max-w-xl">
+              <div className="flex flex-col w-full lg:w-1/4 lg:max-w-xl">
                 <p className="text-md font-bold text-gray-700 flex-none">
                   Console
                 </p>
-                <div className="mt-2 p-6 bg-gray-800 rounded-md grow text text-white font-mono text-sm">
+                <div className="mt-2 p-6 bg-gray-800 rounded-md lg:grow min-h-28 text text-white font-mono text-sm">
                   {callbackObject ? (
                     <div className="pb-8">
                       <p>Client ID: {callbackObject.client}</p>
