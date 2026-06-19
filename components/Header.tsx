@@ -15,14 +15,24 @@ const Header = () => {
             Explore Integrated Onboarding
           </h1>
         </div>
-        <a
-          className="text-sm text-gray-400 px-3 py-1 outline-none hover:text-gray-500"
-          href="https://www.360dialog.com/contact#dataprivacy"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Privacy Policy →
-        </a>
+        <div className="flex flex-row items-center gap-2">
+          <a
+            className="text-sm text-blue-500 px-3 py-1 outline-none hover:text-blue-700"
+            href="https://docs.360dialog.com/partner/onboarding/integrated-onboarding/connect-button"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Documentation →
+          </a>
+          <a
+            className="text-sm text-gray-400 px-3 py-1 outline-none hover:text-gray-500"
+            href="https://www.360dialog.com/contact#dataprivacy"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Privacy Policy →
+          </a>
+        </div>
       </div>
     );
 }
