@@ -29,6 +29,7 @@ type QueryParametersType = {
   forwardState: string;
   next: string;
   planSelection: string;
+  planName?: string;
   flow: string;
   ioSignature: string;
   ioTimestamp: string;
@@ -58,7 +59,7 @@ export default function Home() {
       redirectUrl: "",
       forwardState: "",
       next: "",
-      planSelection: "regular",
+      planSelection: "",
       flow: "",
       ioSignature: "",
       ioTimestamp: "",
@@ -72,10 +73,11 @@ export default function Home() {
   const router = useRouter();
   const { id } = router.query;
 
-  const handlePlanChange = (v: { name: string }) => {
+  const handlePlanChange = (v: { name: string; label?: string }) => {
     setQueryParamatersState((queryParametersState) => ({
       ...queryParametersState,
       planSelection: v.name,
+      planName: v.label,
     }));
   };
 
@@ -266,7 +268,10 @@ export default function Home() {
       { stateVar: "flow", attr: "flow" },
       { stateVar: "ioSignature", attr: "io-signature" },
       { stateVar: "ioTimestamp", attr: "io-timestamp" },
-      { stateVar: "preverifiedPhoneNumberId", attr: "preverified-phone-number-id" },
+      {
+        stateVar: "preverifiedPhoneNumberId",
+        attr: "preverified-phone-number-id",
+      },
     ];
 
     const attrLines: string[] = [
@@ -334,9 +339,7 @@ export default function Home() {
 
         <div className="flex flex-col pt-4 px-8 lg:grow lg:h-1/3">
           <div className="lg:h-1/3 lg:grow lg:overflow-x-auto pt-6 pb-6">
-            <div
-              className="flex flex-col lg:flex-row gap-6 lg:h-full"
-            >
+            <div className="flex flex-col lg:flex-row gap-6 lg:h-full">
               <div
                 className="overflow-auto relative w-full lg:w-1/4 lg:min-w-96 pr-6"
                 onScroll={handleScroll}
@@ -402,26 +405,32 @@ export default function Home() {
                         fill="currentColor"
                         className={`w-4 h-4 text-gray-500 transition-transform lg:hidden ${syncParamsOpen ? "rotate-180" : ""}`}
                       >
-                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                        <path
+                          fillRule="evenodd"
+                          d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </button>
                   </div>
 
-                  <div className={`${syncParamsOpen ? "flex" : "hidden"} lg:flex flex-col gap-6`}>
-                  <Input
-                    label="Redirect URL"
-                    name="redirectUrl"
-                    value={queryParametersState.redirectUrl}
-                    onChange={handleQueryParameterChange}
-                    optional
-                  />
-                  <Input
-                    label="State"
-                    name="forwardState"
-                    value={queryParametersState.forwardState}
-                    onChange={handleQueryParameterChange}
-                    optional
-                  />
+                  <div
+                    className={`${syncParamsOpen ? "flex" : "hidden"} lg:flex flex-col gap-6`}
+                  >
+                    <Input
+                      label="Redirect URL"
+                      name="redirectUrl"
+                      value={queryParametersState.redirectUrl}
+                      onChange={handleQueryParameterChange}
+                      optional
+                    />
+                    <Input
+                      label="State"
+                      name="forwardState"
+                      value={queryParametersState.forwardState}
+                      onChange={handleQueryParameterChange}
+                      optional
+                    />
                   </div>
 
                   <div>
@@ -440,44 +449,53 @@ export default function Home() {
                         fill="currentColor"
                         className={`w-4 h-4 text-gray-500 transition-transform lg:hidden ${clientDataOpen ? "rotate-180" : ""}`}
                       >
-                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                        <path
+                          fillRule="evenodd"
+                          d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </button>
                   </div>
 
-                  <div className={`${clientDataOpen ? "flex" : "hidden"} lg:flex flex-col gap-6`}>
-                  <Input
-                    label="Number"
-                    value={number}
-                    onChange={(e) => setNumber(e.target.value)}
-                    optional
-                  />
-                  <Input
-                    label="Email"
-                    name="email"
-                    value={queryParametersState.email}
-                    onChange={handleQueryParameterChange}
-                    optional
-                  />
-                  <Input
-                    label="Name"
-                    name="clientName"
-                    value={queryParametersState.clientName}
-                    onChange={handleQueryParameterChange}
-                    optional
-                  />
-                  <Select
-                    label="Payment Plan"
-                    name="planSelection"
-                    selected={{ name: queryParametersState.planSelection }}
-                    onChange={handlePlanChange}
-                    optional
-                    options={[
-                      // { name: "basic" },
-                      { name: "regular" },
-                      { name: "premium" },
-                    ]}
-                  />
+                  <div
+                    className={`${clientDataOpen ? "flex" : "hidden"} lg:flex flex-col gap-6`}
+                  >
+                    <Input
+                      label="Number"
+                      value={number}
+                      onChange={(e) => setNumber(e.target.value)}
+                      optional
+                    />
+                    <Input
+                      label="Email"
+                      name="email"
+                      value={queryParametersState.email}
+                      onChange={handleQueryParameterChange}
+                      optional
+                    />
+                    <Input
+                      label="Name"
+                      name="clientName"
+                      value={queryParametersState.clientName}
+                      onChange={handleQueryParameterChange}
+                      optional
+                    />
+                    <Select
+                      label="Payment Plan"
+                      name="planSelection"
+                      selected={{
+                        name: queryParametersState.planSelection,
+                        label: queryParametersState.planName,
+                      }}
+                      onChange={handlePlanChange}
+                      optional
+                      options={[
+                        // { name: "basic" },
+                        { name: "regular", label: "Regular" },
+                        { name: "premium", label: "Premium" },
+                      ]}
+                    />
                   </div>
                   <div>
                     <div className="h-px w-full bg-gray-300 mt-9 mb-6" />
@@ -495,40 +513,46 @@ export default function Home() {
                         fill="currentColor"
                         className={`w-4 h-4 text-gray-500 transition-transform lg:hidden ${advancedOpen ? "rotate-180" : ""}`}
                       >
-                        <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                        <path
+                          fillRule="evenodd"
+                          d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </button>
                   </div>
 
-                  <div className={`${advancedOpen ? "flex" : "hidden"} lg:flex flex-col gap-6`}>
-                  <Input
-                    label="Flow"
-                    name="flow"
-                    value={queryParametersState.flow}
-                    onChange={handleQueryParameterChange}
-                    optional
-                  />
-                  <Input
-                    label="IO Signature"
-                    name="ioSignature"
-                    value={queryParametersState.ioSignature}
-                    onChange={handleQueryParameterChange}
-                    optional
-                  />
-                  <Input
-                    label="IO Timestamp"
-                    name="ioTimestamp"
-                    value={queryParametersState.ioTimestamp}
-                    onChange={handleQueryParameterChange}
-                    optional
-                  />
-                  <Input
-                    label="Preverified Phone Number ID"
-                    name="preverifiedPhoneNumberId"
-                    value={queryParametersState.preverifiedPhoneNumberId}
-                    onChange={handleQueryParameterChange}
-                    optional
-                  />
+                  <div
+                    className={`${advancedOpen ? "flex" : "hidden"} lg:flex flex-col gap-6`}
+                  >
+                    <Input
+                      label="Flow"
+                      name="flow"
+                      value={queryParametersState.flow}
+                      onChange={handleQueryParameterChange}
+                      optional
+                    />
+                    <Input
+                      label="IO Signature"
+                      name="ioSignature"
+                      value={queryParametersState.ioSignature}
+                      onChange={handleQueryParameterChange}
+                      optional
+                    />
+                    <Input
+                      label="IO Timestamp"
+                      name="ioTimestamp"
+                      value={queryParametersState.ioTimestamp}
+                      onChange={handleQueryParameterChange}
+                      optional
+                    />
+                    <Input
+                      label="Preverified Phone Number ID"
+                      name="preverifiedPhoneNumberId"
+                      value={queryParametersState.preverifiedPhoneNumberId}
+                      onChange={handleQueryParameterChange}
+                      optional
+                    />
                   </div>
 
                   {showScrollLabel && (
@@ -838,7 +862,9 @@ export default function Home() {
                     <div className="absolute top-3 right-3">
                       <Button
                         onClick={() => {
-                          navigator.clipboard.writeText(generateVanillaSnippet());
+                          navigator.clipboard.writeText(
+                            generateVanillaSnippet(),
+                          );
                           setVanillaCopied(true);
                         }}
                         outlined
