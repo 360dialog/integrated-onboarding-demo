@@ -1,11 +1,11 @@
-import React from "react"
-import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
-
+import React from "react";
+import { Listbox, Transition } from "@headlessui/react";
+import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 type OptionsType = {
-    name: string,
-}
+  name: string;
+  label?: string;
+};
 
 interface ISelect {
   label: string;
@@ -17,8 +17,15 @@ interface ISelect {
   options: OptionsType[];
 }
 
-const Select = ({ label, name, onChange, placeholder, optional, selected, options }: ISelect) => {
-
+const Select = ({
+  label,
+  name,
+  onChange,
+  placeholder,
+  optional,
+  selected,
+  options,
+}: ISelect) => {
   return (
     <div>
       <div className="flex flex-row justify-between items-baseline">
@@ -40,7 +47,7 @@ const Select = ({ label, name, onChange, placeholder, optional, selected, option
             }`}
           >
             <span className="block truncate">
-              {selected.name === "" ? "Select plan" : selected.name}
+              {selected.name === "" ? "Select plan" : selected.label}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon
@@ -56,15 +63,15 @@ const Select = ({ label, name, onChange, placeholder, optional, selected, option
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white p-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {options.map((person, personIdx) => (
+              {options.map((option, optionIdx) => (
                 <Listbox.Option
-                  key={personIdx}
+                  key={optionIdx}
                   className={({ active }) =>
                     `relative cursor-default select-none py-2 pl-3 pr-4 rounded ${
                       active ? "bg-indigo-100 text-indigo-900" : "text-gray-900"
                     }`
                   }
-                  value={person}
+                  value={option}
                 >
                   {({ selected }) => (
                     <>
@@ -73,7 +80,7 @@ const Select = ({ label, name, onChange, placeholder, optional, selected, option
                           selected ? "font-medium" : "font-normal"
                         }`}
                       >
-                        {person.name}
+                        {option.label}
                       </span>
                       {selected ? (
                         <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-indigo-600">
